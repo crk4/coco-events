@@ -32,7 +32,7 @@ export const TicketList = () => {
         });
     };
     fetchData();
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

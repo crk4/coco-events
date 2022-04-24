@@ -1,8 +1,6 @@
 import Web3 from "web3";
 
 export default class Web3Singleton {
-  constructor() {}
-
   static async getInstance() {
     if (!this.instance) {
       this.instance = await getWeb3();

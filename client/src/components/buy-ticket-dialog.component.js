@@ -57,7 +57,7 @@ export default function BuyTicketDialog(props) {
       }
     };
     fetchData();
-  }, [open]);
+  }, [dispatch, open, accounts, event.tokenId]);
 
   const handleCloseDialog = () => {
     setTicketNumber("");

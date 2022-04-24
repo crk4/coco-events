@@ -60,7 +60,7 @@ export const EventList = (props) => {
         });
     };
     fetchData();
-  }, [accounts]);
+  }, [dispatch, accounts]);
 
   const openTicketDialog = (event) => {
     setCurrentEvent(event);
