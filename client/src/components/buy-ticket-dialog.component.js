@@ -23,34 +23,40 @@ export default function BuyTicketDialog(props) {
   const [soldTickets, setSoldTickets] = React.useState([]);
   const [accounts, setAccounts] = React.useState([]);
 
-  React.useEffect(async () => {
-    const accounts = await getAccounts();
-    setAccounts(accounts);
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const accounts = await getAccounts();
+      setAccounts(accounts);
+    };
+    fetchData();
   }, []);
 
-  React.useEffect(async () => {
-    if (open) {
-      const cocoEvents = await getCocoEventsContractInstance();
-      cocoEvents.methods
-        .getAllTicketsByEvent(event.tokenId)
-        .call({ from: accounts[0] })
-        .then((result) => {
-          console.log(result);
-          setSoldTickets(result);
-          setLoadingSold(false);
-          loadSeatAvailability();
-        })
-        .catch((error) => {
-          console.log(error);
-          dispatch(
-            showSnackbar({
-              open: true,
-              message: "Error loading tickets availability",
-              severity: "error",
-            })
-          );
-        });
-    }
+  React.useEffect(() => {
+    const fetchData = async () => {
+      if (open) {
+        const cocoEvents = await getCocoEventsContractInstance();
+        cocoEvents.methods
+          .getAllTicketsByEvent(event.tokenId)
+          .call({ from: accounts[0] })
+          .then((result) => {
+            console.log(result);
+            setSoldTickets(result);
+            setLoadingSold(false);
+            loadSeatAvailability();
+          })
+          .catch((error) => {
+            console.log(error);
+            dispatch(
+              showSnackbar({
+                open: true,
+                message: "Error loading tickets availability",
+                severity: "error",
+              })
+            );
+          });
+      }
+    };
+    fetchData();
   }, [open]);
 
   const handleCloseDialog = () => {

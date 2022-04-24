@@ -16,19 +16,22 @@ export const TicketList = () => {
   const dispatch = useDispatch();
   const tickets = useSelector((state) => state.ticket.tickets);
 
-  useEffect(async () => {
-    const accounts = await getAccounts();
-    const cocoEvents = await getCocoEventsContractInstance();
-    cocoEvents.methods
-      .getMyTickets()
-      .call({ from: accounts[0] })
-      .then((result) => {
-        dispatch(saveTickets(result));
-        console.log(result);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  useEffect(() => {
+    const fetchData = async () => {
+      const accounts = await getAccounts();
+      const cocoEvents = await getCocoEventsContractInstance();
+      cocoEvents.methods
+        .getMyTickets()
+        .call({ from: accounts[0] })
+        .then((result) => {
+          dispatch(saveTickets(result));
+          console.log(result);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    fetchData();
   }, []);
 
   return (

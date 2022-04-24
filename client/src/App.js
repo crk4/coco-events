@@ -10,14 +10,17 @@ import { TicketList } from "./components/ticket-list.component";
 
 const App = () => {
   const [web3, setWeb3] = useState(null);
-  useEffect(async () => {
-    try {
-      const web3 = await Web3Singleton.getInstance();
-      setWeb3(web3);
-    } catch (error) {
-      alert(`Failed to load web3, accounts, or contract.`);
-      console.error(error);
-    }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const web3 = await Web3Singleton.getInstance();
+        setWeb3(web3);
+      } catch (error) {
+        alert(`Failed to load web3, accounts, or contract.`);
+        console.error(error);
+      }
+    };
+    fetchData();
   }, []);
 
   if (!web3) {

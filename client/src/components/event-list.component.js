@@ -31,29 +31,35 @@ export const EventList = (props) => {
   const [currentEvent, setCurrentEvent] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
 
-  useEffect(async () => {
-    setAccounts(await getAccounts());
+  useEffect(() => {
+    const fetchData = async () => {
+      setAccounts(await getAccounts());
+    };
+    fetchData();
   }, []);
 
-  useEffect(async () => {
-    const cocoEvents = await getCocoEventsContractInstance();
-    cocoEvents.methods
-      .getAllEvents()
-      .call({ from: accounts[0] })
-      .then((result) => {
-        dispatch(saveEvents(result));
-        console.log(result);
-      })
-      .catch((error) => {
-        console.log(error);
-        dispatch(
-          showSnackbar({
-            open: true,
-            message: "Error loading events",
-            severity: "error",
-          })
-        );
-      });
+  useEffect(() => {
+    const fetchData = async () => {
+      const cocoEvents = await getCocoEventsContractInstance();
+      cocoEvents.methods
+        .getAllEvents()
+        .call({ from: accounts[0] })
+        .then((result) => {
+          dispatch(saveEvents(result));
+          console.log(result);
+        })
+        .catch((error) => {
+          console.log(error);
+          dispatch(
+            showSnackbar({
+              open: true,
+              message: "Error loading events",
+              severity: "error",
+            })
+          );
+        });
+    };
+    fetchData();
   }, [accounts]);
 
   const openTicketDialog = (event) => {
