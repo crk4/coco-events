@@ -1,0 +1,20 @@
+{
+  "name": "coco-events",
+  "version": "0.1.0",
+  "description": "This is used to manage the events ticketing using NFT.",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ranjithkumar Chelladurai",
+  "license": "ISC",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.5.0"
+  },
+  "devDependencies": {
+    "@truffle/hdwallet-provider": "^2.0.7"
+  }
+}

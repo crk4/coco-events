@@ -1,0 +1,14 @@
+.cover-image {
+  width: 164px;
+  height: 164px;
+  padding: 5px;
+}
+
+.cover-image img {
+  width: 100%;
+  height: 100%;
+}
+
+.event-list-wrap {
+  padding: 15px;
+}
