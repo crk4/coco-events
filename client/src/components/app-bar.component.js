@@ -11,7 +11,6 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import CreateEventDialog from "./create-event-dialog.component";
-import "../styles/app-bar.styles.css";
 
 export default function COCOAppBar() {
   const [openDialog, setOpenDialog] = useState(false);

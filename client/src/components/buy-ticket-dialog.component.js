@@ -12,7 +12,6 @@ import Chip from "@mui/material/Chip";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { showSnackbar } from "../reducers/snackbar.reducer";
-import "../styles/buy-ticket-dialog.styles.css";
 
 export default function BuyTicketDialog(props) {
   const dispatch = useDispatch();
@@ -35,6 +34,7 @@ export default function BuyTicketDialog(props) {
     const fetchData = async () => {
       if (open) {
         const cocoEvents = await getCocoEventsContractInstance();
+        setLoadingSold(true);
         cocoEvents.methods
           .getAllTicketsByEvent(event.tokenId)
           .call({ from: accounts[0] })
@@ -153,7 +153,7 @@ export default function BuyTicketDialog(props) {
           />
           <p>Tickets Availability</p>
           {loadingSold ? (
-            <Box className="progress-box">
+            <Box className="flex-center ticket-avail-loading">
               <CircularProgress />
             </Box>
           ) : (

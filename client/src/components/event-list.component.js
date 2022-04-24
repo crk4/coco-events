@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import "../styles/event-list.styles.css";
 import Grid from "@mui/material/Grid";
 import CardMedia from "@mui/material/CardMedia";
 import Alert from "@mui/material/Alert";
@@ -11,6 +10,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import BuyTicketDialog from "./buy-ticket-dialog.component";
 import getAccounts from "../utils/getAccounts";
 import getCocoEventsContractInstance from "../utils/getCocoEventsContract";
@@ -28,6 +28,7 @@ export const EventList = (props) => {
       return state.event.events.filter((e) => e.owner === accounts[0]);
     }
   });
+  const [loadingEvents, setLoadingEvents] = useState(true);
   const [currentEvent, setCurrentEvent] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -41,11 +42,13 @@ export const EventList = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       const cocoEvents = await getCocoEventsContractInstance();
+      setLoadingEvents(true);
       cocoEvents.methods
         .getAllEvents()
         .call({ from: accounts[0] })
         .then((result) => {
           dispatch(saveEvents(result));
+          setLoadingEvents(false);
           console.log(result);
         })
         .catch((error) => {
@@ -76,56 +79,62 @@ export const EventList = (props) => {
           No Events Found. Please start creating events.
         </Alert>
       )}
-      <div className="event-list-wrap">
-        <Typography gutterBottom variant="h5">
-          {type === "all" ? "All Events" : "My Events"}
-        </Typography>
-        <Box>
-          <Grid sx={{ flexGrow: 1 }} container spacing={2}>
-            <Grid item xs={12}>
-              <Grid container spacing={2}>
-                {events.length
-                  ? events.map((event, index) => (
-                      <Grid key={index} item>
-                        <Card sx={{ minWidth: 345 }}>
-                          <CardMedia
-                            component="img"
-                            alt="coverImage"
-                            height="140"
-                            image={event.coverImage}
-                          />
-                          <CardContent>
-                            <Typography
-                              gutterBottom
-                              variant="h5"
-                              component="div"
-                            >
-                              {event.name}
-                            </Typography>
-                            <Typography
-                              variant="subtitle1"
-                              color="text.secondary"
-                            >
-                              {event.description}
-                            </Typography>
-                          </CardContent>
-                          <CardActions>
-                            <Button
-                              size="small"
-                              onClick={() => openTicketDialog(event)}
-                            >
-                              Tickets
-                            </Button>
-                          </CardActions>
-                        </Card>
-                      </Grid>
-                    ))
-                  : ""}
+      {loadingEvents ? (
+        <Box className="progress-box flex-center">
+          <CircularProgress />
+        </Box>
+      ) : (
+        <div className="event-list-wrap">
+          <Typography gutterBottom variant="h5">
+            {type === "all" ? "All Events" : "My Events"}
+          </Typography>
+          <Box>
+            <Grid sx={{ flexGrow: 1 }} container spacing={2}>
+              <Grid item xs={12}>
+                <Grid container spacing={2}>
+                  {events.length
+                    ? events.map((event, index) => (
+                        <Grid key={index} item>
+                          <Card sx={{ minWidth: 345 }}>
+                            <CardMedia
+                              component="img"
+                              alt="coverImage"
+                              height="140"
+                              image={event.coverImage}
+                            />
+                            <CardContent>
+                              <Typography
+                                gutterBottom
+                                variant="h5"
+                                component="div"
+                              >
+                                {event.name}
+                              </Typography>
+                              <Typography
+                                variant="subtitle1"
+                                color="text.secondary"
+                              >
+                                {event.description}
+                              </Typography>
+                            </CardContent>
+                            <CardActions>
+                              <Button
+                                size="small"
+                                onClick={() => openTicketDialog(event)}
+                              >
+                                Tickets
+                              </Button>
+                            </CardActions>
+                          </Card>
+                        </Grid>
+                      ))
+                    : ""}
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Box>
-      </div>
+          </Box>
+        </div>
+      )}
       {events.length ? (
         <BuyTicketDialog
           event={currentEvent}
