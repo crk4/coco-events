@@ -42,7 +42,6 @@ export default function BuyTicketDialog(props) {
             console.log(result);
             setSoldTickets(result);
             setLoadingSold(false);
-            loadSeatAvailability();
           })
           .catch((error) => {
             console.log(error);
