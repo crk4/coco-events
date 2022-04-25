@@ -9,11 +9,14 @@ import DialogTitle from "@mui/material/DialogTitle";
 import getCocoEventsContractInstance from "../utils/getCocoEventsContract";
 import { updateEvent } from "../reducers/event.reducer";
 import { showSnackbar } from "../reducers/snackbar.reducer";
+import { CircularProgress } from "@mui/material";
+import { Box } from "@mui/system";
 
 export default function CreateEventDialog(props) {
   const dispatch = useDispatch();
   const { open, closeDialog } = props;
   const accounts = useSelector((state) => state.account.accounts);
+  const [creatingEvent, setCreatingEvent] = React.useState(false);
 
   const formInitialValues = {
     name: "",
@@ -74,6 +77,7 @@ export default function CreateEventDialog(props) {
       const cocoEvents = await getCocoEventsContractInstance();
       event.tokenId = 0;
       event.owner = accounts[0];
+      setCreatingEvent(true);
       cocoEvents.methods
         .createEvent(event)
         .send({ from: accounts[0] })
@@ -81,8 +85,9 @@ export default function CreateEventDialog(props) {
           console.log(result);
           event.tokenId = result.events.EventCreated.returnValues._eventId;
           dispatch(updateEvent({ ...event }));
-          setEvent(formInitialValues);
           closeDialog();
+          setEvent(formInitialValues);
+          setCreatingEvent(false);
           dispatch(
             showSnackbar({
               open: true,
@@ -92,6 +97,7 @@ export default function CreateEventDialog(props) {
         })
         .catch((error) => {
           console.log(error);
+          setCreatingEvent(false);
           dispatch(
             showSnackbar({
               open: true,
@@ -191,7 +197,12 @@ export default function CreateEventDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={closeDialog}>Cancel</Button>
-          <Button onClick={handleCreateEvent}>Create</Button>
+          <Box className="button-box flex-center">
+            {!creatingEvent && (
+              <Button onClick={handleCreateEvent}>Create</Button>
+            )}
+            {creatingEvent && <CircularProgress size="1.25rem" />}
+          </Box>
         </DialogActions>
       </Dialog>
     </div>

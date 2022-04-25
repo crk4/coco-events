@@ -20,6 +20,7 @@ export default function BuyTicketDialog(props) {
   const [ticketNumber, setTicketNumber] = React.useState("");
   const [loadingSold, setLoadingSold] = React.useState(true);
   const [soldTickets, setSoldTickets] = React.useState([]);
+  const [bookingTicket, setBookingTicket] = React.useState(false);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -57,6 +58,7 @@ export default function BuyTicketDialog(props) {
   const handleBuyTicket = async () => {
     if (ticketNumber) {
       const cocoEvents = await getCocoEventsContractInstance();
+      setBookingTicket(true);
       cocoEvents.methods
         .buyTicket(event.tokenId, ticketNumber)
         .send({ from: accounts[0], value: event.ticketPrice })
@@ -64,6 +66,7 @@ export default function BuyTicketDialog(props) {
           console.log(result);
           closeDialog();
           setTicketNumber("");
+          setBookingTicket(false);
           dispatch(
             showSnackbar({
               open: true,
@@ -72,6 +75,7 @@ export default function BuyTicketDialog(props) {
           );
         })
         .catch(() => {
+          setBookingTicket(false);
           dispatch(
             showSnackbar({
               open: true,
@@ -153,9 +157,14 @@ export default function BuyTicketDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleBuyTicket} disabled={!ticketNumber}>
-            Buy
-          </Button>
+          <Box className="button-box flex-center">
+            {!bookingTicket && (
+              <Button onClick={handleBuyTicket} disabled={!ticketNumber}>
+                Buy
+              </Button>
+            )}
+            {bookingTicket && <CircularProgress size="1.25rem" />}
+          </Box>
         </DialogActions>
       </Dialog>
     </div>
