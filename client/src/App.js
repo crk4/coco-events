@@ -25,7 +25,7 @@ const App = () => {
 
   if (!web3) {
     return (
-      <Box className="progress-box">
+      <Box className="progress-box flex-center">
         <CircularProgress />
       </Box>
     );
