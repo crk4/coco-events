@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -7,13 +7,14 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import getCocoEventsContractInstance from "../utils/getCocoEventsContract";
-import getAccounts from "../utils/getAccounts";
 import { updateEvent } from "../reducers/event.reducer";
 import { showSnackbar } from "../reducers/snackbar.reducer";
 
 export default function CreateEventDialog(props) {
   const dispatch = useDispatch();
   const { open, closeDialog } = props;
+  const accounts = useSelector((state) => state.account.accounts);
+
   const formInitialValues = {
     name: "",
     description: "",
@@ -70,7 +71,6 @@ export default function CreateEventDialog(props) {
   const handleCreateEvent = async () => {
     const isValid = validate();
     if (isValid) {
-      const accounts = await getAccounts();
       const cocoEvents = await getCocoEventsContractInstance();
       event.tokenId = 0;
       event.owner = accounts[0];

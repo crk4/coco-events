@@ -1,22 +1,38 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import Alert from "@mui/material/Alert";
 import Web3Singleton from "./utils/getWeb3";
 import Layout from "./components/layout.component";
 import "./App.css";
 import { EventList } from "./components/event-list.component";
 import { TicketList } from "./components/ticket-list.component";
+import { saveAccounts } from "./reducers/account.reducer";
+import getAccounts from "./utils/getAccounts";
 
 const App = () => {
+  const dispatch = useDispatch();
   const [web3, setWeb3] = useState(null);
+  const [error, setError] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const web3 = await Web3Singleton.getInstance();
-        setWeb3(web3);
+        const accounts = await getAccounts();
+        if (accounts.length) {
+          dispatch(saveAccounts(accounts));
+        } else {
+          setError(true);
+        }
+        if (web3) {
+          setWeb3(web3);
+        } else {
+          setError(true);
+        }
       } catch (error) {
-        alert(`Failed to load web3, accounts, or contract.`);
+        setError(true);
         console.error(error);
       }
     };
@@ -27,6 +43,14 @@ const App = () => {
     return (
       <Box className="progress-box flex-center">
         <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box className="progress-box flex-center">
+        <Alert severity="error">Error loading Web3</Alert>
       </Box>
     );
   }

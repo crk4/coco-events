@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -7,7 +7,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import getCocoEventsContractInstance from "../utils/getCocoEventsContract";
-import getAccounts from "../utils/getAccounts";
 import Chip from "@mui/material/Chip";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -16,19 +15,11 @@ import { showSnackbar } from "../reducers/snackbar.reducer";
 export default function BuyTicketDialog(props) {
   const dispatch = useDispatch();
   const { open, closeDialog, event } = props;
+  const accounts = useSelector((state) => state.account.accounts);
 
   const [ticketNumber, setTicketNumber] = React.useState("");
   const [loadingSold, setLoadingSold] = React.useState(true);
   const [soldTickets, setSoldTickets] = React.useState([]);
-  const [accounts, setAccounts] = React.useState([]);
-
-  React.useEffect(() => {
-    const fetchData = async () => {
-      const accounts = await getAccounts();
-      setAccounts(accounts);
-    };
-    fetchData();
-  }, []);
 
   React.useEffect(() => {
     const fetchData = async () => {
