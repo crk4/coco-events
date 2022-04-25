@@ -37,7 +37,7 @@ export const TicketList = () => {
         });
     };
     fetchData();
-  }, [dispatch]);
+  }, [dispatch, accounts]);
 
   return (
     <>

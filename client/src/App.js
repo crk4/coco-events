@@ -37,7 +37,7 @@ const App = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [dispatch]);
 
   if (!web3) {
     return (
